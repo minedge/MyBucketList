@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -35,21 +36,29 @@ public class LoginActivity extends AppCompatActivity {
 
         NetworkUtil.setNetworkPolicy();
 
+        TextView id_text = findViewById(R.id.login_email);
+        TextView pw_text = findViewById(R.id.login_password);
+
         Button login = findViewById(R.id.login_button);
         login.setOnClickListener(v->{
+            String input_id = id_text.getText().toString();
+            String input_pw = pw_text.getText().toString();
             try{
-                PHPRequest request = new PHPRequest(url+"/apmtest.php");
-                request.PhPgetData("minedge");
-                Toast myToast = Toast.makeText(this.getApplicationContext(), request.result_string,Toast.LENGTH_SHORT);
-                myToast.show();
+                PHPRequest request = new PHPRequest(url+"/login.php");
+                request.PhPlogin(input_id, input_pw);
+                if(request.result_string.equals("1")){
+                    Toast myToast = Toast.makeText(this.getApplicationContext(), "환영합니다.",Toast.LENGTH_SHORT);
+                    myToast.show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Toast myToast = Toast.makeText(this.getApplicationContext(), "ID / PW Error",Toast.LENGTH_SHORT);
+                    myToast.show();
+                }
             }catch(MalformedURLException e){
                 e.printStackTrace();
             }
-            /*
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            */
         });
 
         Button sign_up = findViewById(R.id.join_button);

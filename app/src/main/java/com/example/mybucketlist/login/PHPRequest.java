@@ -29,6 +29,31 @@ public class PHPRequest {
         return jsonHtml.toString();
     }
 
+    public String PhPlogin(final String id, final String pw){
+        String result = null;
+        try{
+            String postData = "ID=" + id + "&" + "PW=" + pw;
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestMethod("POST");
+            conn.setConnectTimeout(5000);
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(postData.getBytes("UTF-8"));
+            outputStream.flush();
+            outputStream.close();
+            result = readStream(conn.getInputStream());
+            conn.disconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        result_string = result;
+        return result;
+    }
+
     public String PhPgetData(final String id){
         String result = null;
         try{
