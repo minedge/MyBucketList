@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class LoginActivity extends AppCompatActivity {
-    public static String url = "https://minedge.github.io/htdocs";
+    public static String url = "http://minpark307.hopto.org:88";
 
     @Deprecated
     @SuppressLint("StaticFieldLeak")
@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
 
-            result_response = asyncTask.execute(url, "/apmtest.html").get();
+            result_response = asyncTask.execute(url, "/apmtest.php").get();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         Button login = findViewById(R.id.login_button);
         login.setOnClickListener(v->{
             try{
-                PHPRequest request = new PHPRequest(url+"/apmtest.html");
+                PHPRequest request = new PHPRequest(url+"/apmtest.php");
                 request.PhPgetData("minedge");
                 Toast myToast = Toast.makeText(this.getApplicationContext(), request.result_string,Toast.LENGTH_SHORT);
                 myToast.show();
