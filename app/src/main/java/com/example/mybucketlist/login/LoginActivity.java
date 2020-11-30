@@ -24,33 +24,6 @@ import java.net.MalformedURLException;
 public class LoginActivity extends AppCompatActivity {
     public static String url = "http://minpark307.hopto.org:88";
 
-    @Deprecated
-    @SuppressLint("StaticFieldLeak")
-    public String getResponse(String url) {
-        PHPRequest result_response = null;
-        try {
-            AsyncTask<String, Void, PHPRequest> asyncTask = new AsyncTask<String, Void, PHPRequest>() {
-                @Override
-                protected PHPRequest doInBackground(String... url) {
-                    PHPRequest response = null;
-                    try {
-                        response = new PHPRequest(url[0]+url[1]);
-                        response.PhPgetData("minedge");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return response;
-                }
-            };
-
-            result_response = asyncTask.execute(url, "/apmtest.php").get();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result_response.result_string;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ActionBar mActionBar = getSupportActionBar();
@@ -61,17 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         NetworkUtil.setNetworkPolicy();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 마시멜로우 버전과 같거나 이상이라면
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, "외부 저장소 사용을 위해 읽기/쓰기 필요", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]
-                                {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                        2);  //마지막 인자는 체크해야될 권한 갯수
-            }
-        }
 
         Button login = findViewById(R.id.login_button);
         login.setOnClickListener(v->{
