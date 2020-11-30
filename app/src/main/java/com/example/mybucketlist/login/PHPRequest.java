@@ -20,7 +20,7 @@ public class PHPRequest {
     private String readStream(InputStream in) throws IOException {
         StringBuilder jsonHtml = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        String line = null;
+        String line;
 
         while ((line = reader.readLine()) != null)
             jsonHtml.append(line);
@@ -51,56 +51,6 @@ public class PHPRequest {
         }
 
         result_string = result;
-        return result;
-    }
-
-    public String PhPgetData(final String id){
-        String result = null;
-        try{
-            String postData = "ID=" + id;
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestMethod("POST");
-            conn.setConnectTimeout(5000);
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            OutputStream outputStream = conn.getOutputStream();
-            outputStream.write(postData.getBytes("UTF-8"));
-            outputStream.flush();
-            outputStream.close();
-            result = readStream(conn.getInputStream());
-            conn.disconnect();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        result_string = result;
-        return result;
-    }
-
-    public String PhPtest(final String data1, final String data2) {
-        String result = null;
-        try {
-            String postData = "Data1=" + data1 + "&" + "Data2=" + data2;
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestMethod("POST");
-            conn.setConnectTimeout(5000);
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            OutputStream outputStream = conn.getOutputStream();
-            outputStream.write(postData.getBytes("UTF-8"));
-            outputStream.flush();
-            outputStream.close();
-            result = readStream(conn.getInputStream());
-            conn.disconnect();
-            result_string = result;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         return result;
     }
 }
