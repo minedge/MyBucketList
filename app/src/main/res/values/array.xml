@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="날짜">
+        <item>날짜↑</item>
+        <item>날짜↓</item>
+    </string-array>
+    <string-array name="장소">
+        <item>장소</item>
+        <item>국내</item>
+        <item>국외</item>
+    </string-array>
+    <string-array name="완료여부">
+        <item>완료여부</item>
+        <item>완료</item>
+        <item>미완료</item>
+    </string-array>
+</resources>
