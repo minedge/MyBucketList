@@ -29,10 +29,9 @@ public class PHPRequest {
         return jsonHtml.toString();
     }
 
-    public String PhPlogin(final String id, final String pw){
+    public String PHPCONN(final String postData){
         String result = null;
-        try{
-            String postData = "ID=" + id + "&" + "PW=" + pw;
+        try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             conn.setRequestMethod("POST");
@@ -49,8 +48,24 @@ public class PHPRequest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        result_string = result;
         return result;
+    }
+
+    public String PhPid_check(final String id){
+        String postData = "ID=" + id;
+        result_string = PHPCONN(postData);
+        return result_string;
+    }
+
+    public String PhPlogin(final String id, final String pw){
+        String postData = "ID=" + id + "&" + "PW=" + pw;
+        result_string = PHPCONN(postData);
+        return result_string;
+    }
+
+    public String PhPsign_up(final String id, final String pw, final String name) {
+        String postData = "ID=" + id + "&" + "PW=" + pw + "&" + "NAME=" + name;
+        result_string = PHPCONN(postData);
+        return result_string;
     }
 }
