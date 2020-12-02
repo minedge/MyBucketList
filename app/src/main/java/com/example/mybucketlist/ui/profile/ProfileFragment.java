@@ -27,8 +27,13 @@ public class ProfileFragment extends Fragment {
 
 
         user_text = root.findViewById(R.id.user_id);
+<<<<<<< HEAD
         count_total = root.findViewById(R.id.total_text);
         count_complete = root.findViewById(R.id.complete_text);
+=======
+        count_total = root.findViewById(R.id.total);
+        count_complete = root.findViewById(R.id.complete);
+>>>>>>> 6e121b2b0439b864b65aa87d4cecac88849bcd2d
         Button pushBT = root.findViewById(R.id.push_button);
         Button pullBT = root.findViewById(R.id.pull_button);
 
@@ -40,6 +45,7 @@ public class ProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
+<<<<<<< HEAD
         try {
             PHPRequest request = new PHPRequest(LoginActivity.url + "/total.php");
             request.PhPprofile_id(MainActivity._id);
@@ -56,6 +62,8 @@ public class ProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
+=======
+>>>>>>> 6e121b2b0439b864b65aa87d4cecac88849bcd2d
 
         return root;
     }
