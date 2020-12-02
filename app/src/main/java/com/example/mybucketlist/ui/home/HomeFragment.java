@@ -21,12 +21,9 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         ImageButton addNewItem = root.findViewById(R.id.new_item);
-        addNewItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.mainActivity, EditActivity.class);
-                startActivity(intent);
-            }
+        addNewItem.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.mainActivity, EditActivity.class);
+            startActivity(intent);
         });
 
         return root;

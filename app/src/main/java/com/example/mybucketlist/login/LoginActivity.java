@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             try{
                 PHPRequest request = new PHPRequest(url+"/login.php");
                 request.PhPlogin(MainActivity._id, MainActivity._pw);
-                String[] array = request.result_string.split("#");
+                String[] array = request.result_string.split("|");
                 if(array[0].equals("1")){
                     MainActivity._name = array[1];
                     Toast myToast = Toast.makeText(this.getApplicationContext(), "환영합니다.",Toast.LENGTH_SHORT);

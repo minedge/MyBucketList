@@ -1,6 +1,7 @@
 package com.example.mybucketlist.ui.home;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.mybucketlist.MainActivity;
 import com.example.mybucketlist.R;
+import com.example.mybucketlist.login.LoginActivity;
 import com.example.mybucketlist.login.NetworkUtil;
 import com.example.mybucketlist.login.PHPRequest;
 
@@ -47,6 +49,9 @@ public class EditActivity  extends AppCompatActivity {
         local_spinner = findViewById(R.id.select_local_spinner);
         date_text = findViewById(R.id.date_view_text);
         detail_text = findViewById(R.id.detail_text);
+        Button select_date = findViewById(R.id.set_time);
+
+        select_date.setOnClickListener(this::showDatePicker);
 
         if(!ident_num.equals("0")){
             title_text.setText(input_title);
@@ -54,9 +59,14 @@ public class EditActivity  extends AppCompatActivity {
             date_text.setText(input_date);
             detail_text.setText(input_detail);
         }
-
-        Button select_date = findViewById(R.id.set_time);
-        select_date.setOnClickListener(this::showDatePicker);
+        if(input_complete.equals("1")){
+            title_text.setEnabled(false);
+            local_spinner.setEnabled(false);
+            date_text.setEnabled(false);
+            select_date.setEnabled(false);
+            select_date.setText("완료날짜");
+            detail_text.setEnabled(false);
+        }
 
         Button saveBT = findViewById(R.id.save_button);
         saveBT.setOnClickListener(v -> {
@@ -67,6 +77,9 @@ public class EditActivity  extends AppCompatActivity {
             try {
                 PHPRequest request = new PHPRequest(url + "/insert.php");
                 request.PhPsave(MainActivity._id, input_title, input_local, input_date, input_detail, input_complete, ident_num);
+                Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }catch(MalformedURLException e){
                 e.printStackTrace();
             }
@@ -86,8 +99,7 @@ public class EditActivity  extends AppCompatActivity {
 
                 title_text.setEnabled(false);
                 local_spinner.setEnabled(false);
-                date_text.setText(year + "년 " + month + "월 " + day + "일 ");
-                date_text.setEnabled(false);
+                date_text.setText(year + "-" + month + "-" + day);
                 select_date.setText("완료날짜");
                 select_date.setEnabled(false);
                 detail_text.setEnabled(false);
@@ -96,7 +108,6 @@ public class EditActivity  extends AppCompatActivity {
             }else{
                 title_text.setEnabled(true);
                 local_spinner.setEnabled(true);
-                date_text.setEnabled(true);
                 select_date.setText("날짜선택");
                 select_date.setEnabled(true);
                 detail_text.setEnabled(true);
@@ -117,6 +128,6 @@ public class EditActivity  extends AppCompatActivity {
         String month_string = Integer.toString(month+1);
         String day_string = Integer.toString(day);
         String year_string = Integer.toString(year);
-        date_text.setText(year_string + "년 " + month_string + "월 " + day_string + "일");
+        date_text.setText(year_string + "-" + month_string + "-" + day_string);
     }
 }
