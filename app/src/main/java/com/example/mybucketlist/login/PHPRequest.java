@@ -92,4 +92,10 @@ public class PHPRequest {
         result_string = PHPCONN(postData);
         return result_string;
     }
+
+    public String PhPprofile_id(final String id){
+        String postData = "ID=" + id;
+        result_string = PHPCONN(postData);
+        return result_string;
+    }
 }
