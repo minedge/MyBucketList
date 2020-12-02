@@ -25,7 +25,6 @@ public class ProfileFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
-
         user_text = root.findViewById(R.id.user_id);
         count_total = root.findViewById(R.id.total_text);
         count_complete = root.findViewById(R.id.complete_text);
