@@ -31,7 +31,7 @@ public class EditActivity  extends AppCompatActivity {
     private TextView date_text, title_text, detail_text;
     private Spinner local_spinner;
 
-    public String input_title, input_local, input_date, input_detail, input_complete = "0", ident_num = "0";
+    public static String input_title, input_local, input_date, input_detail, input_complete = "0", ident_num = "0";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -50,6 +50,8 @@ public class EditActivity  extends AppCompatActivity {
         date_text = findViewById(R.id.date_view_text);
         detail_text = findViewById(R.id.detail_text);
         Button select_date = findViewById(R.id.set_time);
+        Button saveBT = findViewById(R.id.save_button);
+        Button complete = findViewById(R.id.complete_button);
 
         select_date.setOnClickListener(this::showDatePicker);
 
@@ -57,8 +59,15 @@ public class EditActivity  extends AppCompatActivity {
             title_text.setText(input_title);
             local_spinner.setSelection(Integer.parseInt(input_local));
             date_text.setText(input_date);
-            detail_text.setText(input_detail);
+            try {
+                PHPRequest request = new PHPRequest(url + "/get_detail.php");
+                request.PhPgetDetail(MainActivity._id, ident_num);
+                detail_text.setText(request.result_string);
+            }catch(MalformedURLException e){
+                e.printStackTrace();
+            }
         }
+
         if(input_complete.equals("1")){
             title_text.setEnabled(false);
             local_spinner.setEnabled(false);
@@ -66,9 +75,9 @@ public class EditActivity  extends AppCompatActivity {
             select_date.setEnabled(false);
             select_date.setText("완료날짜");
             detail_text.setEnabled(false);
+            complete.setText("완료 취소");
         }
 
-        Button saveBT = findViewById(R.id.save_button);
         saveBT.setOnClickListener(v -> {
             input_title = title_text.getText().toString();
             input_local = Integer.toString(local_spinner.getSelectedItemPosition());
@@ -85,7 +94,6 @@ public class EditActivity  extends AppCompatActivity {
             }
         });
 
-        Button complete = findViewById(R.id.complete_button);
         complete.setOnClickListener(v -> {
             if(input_complete.equals("0")){
                 Date currentTime = Calendar.getInstance().getTime();
