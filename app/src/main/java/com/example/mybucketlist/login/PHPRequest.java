@@ -51,6 +51,12 @@ public class PHPRequest {
         return result;
     }
 
+    public String PhPsave(final String id, final String input_title, final String input_local, final String input_date, final String input_detail, final String input_complete, final String ident_num){
+        String postData = "ID=" + id + "&" + "TITEL=" + input_title + "&" + "LOCAL=" + input_local + "&" + "COMPLT=" + input_complete + "&" + "TDATE=" + input_date + "&" + "BODY=" + input_detail + "&" + "ident_num=" + ident_num;
+        result_string = PHPCONN(postData);
+        return result_string;
+    }
+
     public String PhPid_check(final String id){
         String postData = "ID=" + id;
         result_string = PHPCONN(postData);

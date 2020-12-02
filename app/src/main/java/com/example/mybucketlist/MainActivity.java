@@ -15,6 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
     public static Activity mainActivity;
+    public static String _id, _pw, _name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

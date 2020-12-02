@@ -66,6 +66,9 @@ public class SignUpActivity extends AppCompatActivity {
                 try{
                     PHPRequest request = new PHPRequest(url+"/sign_up.php");
                     request.PhPsign_up(input_id, input_pw, input_name);
+                    MainActivity._id = input_id;
+                    MainActivity._pw = input_pw;
+                    MainActivity._name = input_name;
                     Toast myToast = Toast.makeText(this.getApplicationContext(), "환영합니다.",Toast.LENGTH_SHORT);
                     myToast.show();
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);

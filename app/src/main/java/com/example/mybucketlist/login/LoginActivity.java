@@ -41,12 +41,14 @@ public class LoginActivity extends AppCompatActivity {
 
         Button login = findViewById(R.id.login_button);
         login.setOnClickListener(v->{
-            String input_id = id_text.getText().toString();
-            String input_pw = pw_text.getText().toString();
+            MainActivity._id = id_text.getText().toString();
+            MainActivity._pw = pw_text.getText().toString();
             try{
                 PHPRequest request = new PHPRequest(url+"/login.php");
-                request.PhPlogin(input_id, input_pw);
-                if(request.result_string.equals("1")){
+                request.PhPlogin(MainActivity._id, MainActivity._pw);
+                String[] array = request.result_string.split("#");
+                if(array[0].equals("1")){
+                    MainActivity._name = array[1];
                     Toast myToast = Toast.makeText(this.getApplicationContext(), "환영합니다.",Toast.LENGTH_SHORT);
                     myToast.show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
