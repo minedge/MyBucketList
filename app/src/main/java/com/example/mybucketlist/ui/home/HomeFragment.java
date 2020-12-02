@@ -71,8 +71,16 @@ public class HomeFragment extends Fragment {
 
         ImageButton addNewItem = root.findViewById(R.id.new_item);
         addNewItem.setOnClickListener(v -> {
+            EditActivity.input_detail = "";
+            EditActivity.input_local = "0";
+            EditActivity.input_complete = "0";
+            EditActivity.input_title = "";
+            EditActivity.input_date = "";
+            EditActivity.ident_num = "0";
+
             Intent intent = new Intent(MainActivity.mainActivity, EditActivity.class);
             startActivity(intent);
+            MainActivity.mainActivity.finish();
         });
 
         return root;

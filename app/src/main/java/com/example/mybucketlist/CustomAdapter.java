@@ -93,6 +93,7 @@ public class CustomAdapter extends BaseAdapter {
             }
             Intent intent = new Intent(context, EditActivity.class);
             context.startActivity(intent);
+            MainActivity.mainActivity.finish();
         });
 
 
