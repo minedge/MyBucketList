@@ -16,9 +16,10 @@ public class StartActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.hide();
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
@@ -29,10 +30,5 @@ public class StartActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }, DURATION);
-    }
-
-    @Override
-    public void onBackPressed() {
-        // We don't want the splash screen to be interrupted
     }
 }

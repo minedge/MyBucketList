@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import static com.example.mybucketlist.login.LoginActivity.url;
 
 public class CustomAdapter extends BaseAdapter {
-    private ArrayList<PersonalItem> m_List;
+    public ArrayList<PersonalItem> m_List;
 
     public CustomAdapter() {
         m_List = new ArrayList<PersonalItem>();
@@ -73,6 +73,8 @@ public class CustomAdapter extends BaseAdapter {
             date = holder.m_target_date;
             check_box = holder.m_checkbox;
         }
+
+        check_box.setEnabled(false);
 
         title.setText(m_List.get(position).title);
         date.setText(m_List.get(position).date);

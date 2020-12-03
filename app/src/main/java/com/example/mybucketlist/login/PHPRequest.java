@@ -51,6 +51,18 @@ public class PHPRequest {
         return result;
     }
 
+    public String PhPsort(final String id, final String target, final String type){
+        String postData = "ID=" + id + "&" + "TARGET=" + target + "&" + "TYPE=" + type;
+        result_string = PHPCONN(postData);
+        return result_string;
+    }
+
+    public String PhPsearch(final String id, final String target_search){
+        String postData = "ID=" + id + "&" + "TARGET=" + target_search;
+        result_string = PHPCONN(postData);
+        return result_string;
+    }
+
     public String PhPdelete_item(final String id, final String ident_num){
         String postData = "ID=" + id + "&" + "IDNT_NUM=" + ident_num;
         result_string = PHPCONN(postData);

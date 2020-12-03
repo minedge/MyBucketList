@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,14 +84,20 @@ public class EditActivity  extends AppCompatActivity {
             input_local = Integer.toString(local_spinner.getSelectedItemPosition());
             input_date = date_text.getText().toString();
             input_detail = detail_text.getText().toString();
-            try {
-                PHPRequest request = new PHPRequest(url + "/insert.php");
-                request.PhPsave(MainActivity._id, input_title, input_local, input_date, input_detail, input_complete, ident_num);
-                Intent intent = new Intent(EditActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }catch(MalformedURLException e){
-                e.printStackTrace();
+
+            if(input_title.equals("") || input_local.equals("") || input_date.equals("") || input_detail.equals("")) {
+                Toast myToast = Toast.makeText(this.getApplicationContext(), "모든 정보를 입력해 주세요.", Toast.LENGTH_SHORT);
+                myToast.show();
+            }else{
+                try {
+                    PHPRequest request = new PHPRequest(url + "/insert.php");
+                    request.PhPsave(MainActivity._id, input_title, input_local, input_date, input_detail, input_complete, ident_num);
+                    Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }catch(MalformedURLException e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -137,5 +144,12 @@ public class EditActivity  extends AppCompatActivity {
         String day_string = Integer.toString(day);
         String year_string = Integer.toString(year);
         date_text.setText(year_string + "-" + month_string + "-" + day_string);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(EditActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
