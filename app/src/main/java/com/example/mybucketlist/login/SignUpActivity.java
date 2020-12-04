@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.mybucketlist.MainActivity;
 import com.example.mybucketlist.R;
+import com.example.mybucketlist.ui.home.EditActivity;
 
 import java.net.MalformedURLException;
 
@@ -94,5 +95,11 @@ public class SignUpActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
