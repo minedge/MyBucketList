@@ -189,7 +189,7 @@ public class EditActivity  extends AppCompatActivity {
             if(resultCode == RESULT_OK) {
                 try{
                     BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inSampleSize = 4;
+                    options.inSampleSize = 2;
                     InputStream in = getContentResolver().openInputStream(data.getData());
                     Bitmap img = BitmapFactory.decodeStream(in, new Rect(), options);
                     selected_image.setImageBitmap(img);
