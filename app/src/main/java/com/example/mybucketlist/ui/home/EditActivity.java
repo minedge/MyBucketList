@@ -81,6 +81,7 @@ public class EditActivity  extends AppCompatActivity {
 
                     String detail = jsonObject.getString("detail");
                     Bitmap bit_img = StringToBitMap(jsonObject.getString("bitmap"));
+                    BitMapToString(bit_img);
 
                     detail_text.setText(detail);
                     selected_image.setImageBitmap(bit_img);
