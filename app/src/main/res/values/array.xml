@@ -8,7 +8,7 @@
     <string-array name="장소">
         <item>-</item>
         <item>국내</item>
-        <item>국외</item>
+        <item>해외</item>
     </string-array>
     <string-array name="완료여부">
         <item>-</item>
@@ -17,6 +17,6 @@
     </string-array>
     <string-array name="장소수정">
         <item>국내</item>
-        <item>국외</item>
+        <item>해외</item>
     </string-array>
 </resources>

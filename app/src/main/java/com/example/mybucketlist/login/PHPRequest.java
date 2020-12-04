@@ -51,14 +51,18 @@ public class PHPRequest {
         return result;
     }
 
-    public String PhPsort(final String id, final String target, final String type){
-        String postData = "ID=" + id + "&" + "TARGET=" + target + "&" + "TYPE=" + type;
-        result_string = PHPCONN(postData);
-        return result_string;
-    }
-
-    public String PhPsearch(final String id, final String target_search){
-        String postData = "ID=" + id + "&" + "TARGET=" + target_search;
+    public String PhPsort(final String id, final String target_search, final String target_date, final String target_locate, final String target_complete){
+        String type_d, type_l, type_c;
+        if(target_date.equals("날짜↑")) type_d = "asc";
+        else if(target_date.equals("날짜↓")) type_d = "desc";
+        else type_d = "@";
+        if(target_locate.equals("국내")) type_l = "asc";
+        else if(target_locate.equals("해외")) type_l = "desc";
+        else type_l = "@";
+        if(target_complete.equals("미완료")) type_c = "asc";
+        else if(target_complete.equals("완료")) type_c = "desc";
+        else type_c = "@";
+        String postData = "ID=" + id + "&" + "SRCH=" + target_search + "&" + "TYPE_D=" + type_d + "&" + "TYPE_L=" + type_l + "&" + "TYPE_C=" + type_c;
         result_string = PHPCONN(postData);
         return result_string;
     }
@@ -71,12 +75,6 @@ public class PHPRequest {
 
     public String PhPgetDetail(final String id, final String ident_num){
         String postData = "ID=" + id + "&" + "IDNT_NUM=" + ident_num;
-        result_string = PHPCONN(postData);
-        return result_string;
-    }
-
-    public String PhPgetAll(final String id){
-        String postData = "ID=" + id;
         result_string = PHPCONN(postData);
         return result_string;
     }
