@@ -1,10 +1,14 @@
 package com.example.mybucketlist.ui.home;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,20 +20,29 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.mybucketlist.MainActivity;
 import com.example.mybucketlist.R;
-import com.example.mybucketlist.login.LoginActivity;
 import com.example.mybucketlist.login.NetworkUtil;
 import com.example.mybucketlist.login.PHPRequest;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import android.util.Base64;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import static com.example.mybucketlist.login.LoginActivity.url;
 
 public class EditActivity  extends AppCompatActivity {
+    static ProgressDialog pd;
     private TextView date_text, title_text, detail_text;
+    ImageView selected_image;
+    String imgPath = "null";
     private Spinner local_spinner;
 
     public static String input_title, input_local, input_date, input_detail, input_complete = "0", ident_num = "0";
@@ -50,6 +63,7 @@ public class EditActivity  extends AppCompatActivity {
         local_spinner = findViewById(R.id.select_local_spinner);
         date_text = findViewById(R.id.date_view_text);
         detail_text = findViewById(R.id.detail_text);
+        selected_image = findViewById(R.id.selected_image);
         Button select_date = findViewById(R.id.set_time);
         Button saveBT = findViewById(R.id.save_button);
         Button complete = findViewById(R.id.complete_button);
@@ -57,17 +71,35 @@ public class EditActivity  extends AppCompatActivity {
         select_date.setOnClickListener(this::showDatePicker);
 
         if(!ident_num.equals("0")){
-            title_text.setText(input_title);
-            local_spinner.setSelection(Integer.parseInt(input_local));
-            date_text.setText(input_date);
             try {
                 PHPRequest request = new PHPRequest(url + "/get_detail.php");
                 request.PhPgetDetail(MainActivity._id, ident_num);
-                detail_text.setText(request.result_string);
+                try{
+                    JSONArray jArray=new JSONArray(request.result_string);
+                    JSONObject jsonObject=jArray.getJSONObject(0);
+
+                    String detail = jsonObject.getString("detail");
+                    Bitmap bit_img = StringToBitMap(jsonObject.getString("bitmap"));
+
+                    detail_text.setText(detail);
+                    selected_image.setImageBitmap(bit_img);
+                    selected_image.setVisibility(View.VISIBLE);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }catch(MalformedURLException e){
                 e.printStackTrace();
             }
+        }else{
+            input_title = "";
+            input_local = "0";
+            input_date = "";
+            detail_text.setText("");
+            selected_image.setVisibility(View.INVISIBLE);
         }
+        title_text.setText(input_title);
+        local_spinner.setSelection(Integer.parseInt(input_local));
+        date_text.setText(input_date);
 
         if(input_complete.equals("1")){
             title_text.setEnabled(false);
@@ -75,8 +107,6 @@ public class EditActivity  extends AppCompatActivity {
             date_text.setEnabled(false);
             select_date.setEnabled(false);
             select_date.setText("완료날짜");
-            detail_text.setEnabled(false);
-            complete.setText("완료 취소");
         }
 
         saveBT.setOnClickListener(v -> {
@@ -90,11 +120,16 @@ public class EditActivity  extends AppCompatActivity {
                 myToast.show();
             }else{
                 try {
+                    pd=new ProgressDialog(this);
+                    pd.setMessage("저장 중입니다. 잠시만 기다리세요.");
+                    pd.show();
                     PHPRequest request = new PHPRequest(url + "/insert.php");
-                    request.PhPsave(MainActivity._id, input_title, input_local, input_date, input_detail, input_complete, ident_num);
+                    request.PhPsave(MainActivity._id, input_title, input_local, input_date, input_detail, input_complete, ident_num, imgPath);
+
                     Intent intent = new Intent(EditActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+                    pd.cancel();
                 }catch(MalformedURLException e){
                     e.printStackTrace();
                 }
@@ -102,6 +137,11 @@ public class EditActivity  extends AppCompatActivity {
         });
 
         complete.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent, 0);
+
             if(input_complete.equals("0")){
                 Date currentTime = Calendar.getInstance().getTime();
                 SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
@@ -112,25 +152,87 @@ public class EditActivity  extends AppCompatActivity {
                 String month = monthFormat.format(currentTime);
                 String day = dayFormat.format(currentTime);
 
-                title_text.setEnabled(false);
-                local_spinner.setEnabled(false);
                 date_text.setText(year + "-" + month + "-" + day);
                 select_date.setText("완료날짜");
                 select_date.setEnabled(false);
-                detail_text.setEnabled(false);
-                complete.setText("완료 취소");
                 input_complete = "1";
-            }else{
-                title_text.setEnabled(true);
-                local_spinner.setEnabled(true);
-                select_date.setText("날짜선택");
-                select_date.setEnabled(true);
-                detail_text.setEnabled(true);
-                complete.setText("완료");
-                input_complete = "0";
             }
         });
 
+    }
+
+    public static Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public void BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);	//bitmap compress
+        byte [] arr=baos.toByteArray();
+        String image= Base64.encodeToString(arr, Base64.DEFAULT);
+        try{
+            imgPath = URLEncoder.encode(image,"utf-8");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    /*
+    public static Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte= new byte[0];
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                encodeByte = Base64.getDecoder().decode(image);
+            }
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+    public void BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);	//bitmap compress
+        byte [] arr=baos.toByteArray();
+        String image= null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            image = Base64.getEncoder().encodeToString(arr);
+        }
+
+        try{
+            imgPath= URLEncoder.encode(image,"utf-8");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }*/
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 0) {
+            if(resultCode == RESULT_OK) {
+                try{
+                    InputStream in = getContentResolver().openInputStream(data.getData());
+                    Bitmap img = BitmapFactory.decodeStream(in);
+                    selected_image.setImageBitmap(img);
+                    selected_image.setVisibility(View.VISIBLE);
+                    BitMapToString(img);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            else if(resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public void showDatePicker(View view) {
