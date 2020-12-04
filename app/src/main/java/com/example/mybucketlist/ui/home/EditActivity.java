@@ -5,10 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +41,6 @@ import org.json.JSONObject;
 import static com.example.mybucketlist.login.LoginActivity.url;
 
 public class EditActivity  extends AppCompatActivity {
-    static ProgressDialog pd;
     private TextView date_text, title_text, detail_text;
     ImageView selected_image;
     String imgPath = "null";
@@ -110,6 +111,7 @@ public class EditActivity  extends AppCompatActivity {
         }
 
         saveBT.setOnClickListener(v -> {
+
             input_title = title_text.getText().toString();
             input_local = Integer.toString(local_spinner.getSelectedItemPosition());
             input_date = date_text.getText().toString();
@@ -120,20 +122,17 @@ public class EditActivity  extends AppCompatActivity {
                 myToast.show();
             }else{
                 try {
-                    pd=new ProgressDialog(this);
-                    pd.setMessage("저장 중입니다. 잠시만 기다리세요.");
-                    pd.show();
                     PHPRequest request = new PHPRequest(url + "/insert.php");
                     request.PhPsave(MainActivity._id, input_title, input_local, input_date, input_detail, input_complete, ident_num, imgPath);
 
                     Intent intent = new Intent(EditActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                    pd.cancel();
                 }catch(MalformedURLException e){
                     e.printStackTrace();
                 }
             }
+
         });
 
         complete.setOnClickListener(v -> {
@@ -158,7 +157,6 @@ public class EditActivity  extends AppCompatActivity {
                 input_complete = "1";
             }
         });
-
     }
 
     public static Bitmap StringToBitMap(String image){
@@ -183,36 +181,6 @@ public class EditActivity  extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    /*
-    public static Bitmap StringToBitMap(String image){
-        try{
-            byte [] encodeByte= new byte[0];
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                encodeByte = Base64.getDecoder().decode(image);
-            }
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        }catch(Exception e){
-            e.getMessage();
-            return null;
-        }
-    }
-    public void BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);	//bitmap compress
-        byte [] arr=baos.toByteArray();
-        String image= null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            image = Base64.getEncoder().encodeToString(arr);
-        }
-
-        try{
-            imgPath= URLEncoder.encode(image,"utf-8");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }*/
 
     @SuppressLint("MissingSuperCall")
     @Override
@@ -220,8 +188,10 @@ public class EditActivity  extends AppCompatActivity {
         if(requestCode == 0) {
             if(resultCode == RESULT_OK) {
                 try{
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize = 4;
                     InputStream in = getContentResolver().openInputStream(data.getData());
-                    Bitmap img = BitmapFactory.decodeStream(in);
+                    Bitmap img = BitmapFactory.decodeStream(in, new Rect(), options);
                     selected_image.setImageBitmap(img);
                     selected_image.setVisibility(View.VISIBLE);
                     BitMapToString(img);
