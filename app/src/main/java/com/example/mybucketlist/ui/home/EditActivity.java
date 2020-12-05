@@ -80,10 +80,10 @@ public class EditActivity  extends AppCompatActivity {
                     JSONObject jsonObject=jArray.getJSONObject(0);
 
                     String detail = jsonObject.getString("detail");
+                    detail_text.setText(detail);
+
                     Bitmap bit_img = StringToBitMap(jsonObject.getString("bitmap"));
                     BitMapToString(bit_img);
-
-                    detail_text.setText(detail);
                     selected_image.setImageBitmap(bit_img);
                     selected_image.setVisibility(View.VISIBLE);
                 }catch (Exception e){
