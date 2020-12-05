@@ -18,15 +18,11 @@ public class PHPRequest {
     }
 
     private String readStream(InputStream in) throws IOException {
-        StringBuilder jsonHtml = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        String line;
-
-        while ((line = reader.readLine()) != null)
-            jsonHtml.append(line);
-
+        String line = reader.readLine();
         reader.close();
-        return jsonHtml.toString();
+
+        return line;
     }
 
     public String PHPCONN(final String postData){
