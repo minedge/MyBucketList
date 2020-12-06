@@ -97,18 +97,20 @@ public class CustomAdapter extends BaseAdapter {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("경고!").setMessage("삭제하시겠습니까?");
 
-            builder.setPositiveButton("OK", (dialog, id) -> {
+            builder.setPositiveButton("확인", (dialog, id) -> {
                 try {
                     PHPRequest request = new PHPRequest(url + "/delete_item.php");
                     request.PhPdelete_item(MainActivity._id, m_List.get(pos).ident);
+                    remove(pos);
                     notifyDataSetChanged();
+                    Toast myToast = Toast.makeText(parent.getContext(), "삭제 되었습니다.", Toast.LENGTH_SHORT);
+                    myToast.show();
                 }catch(MalformedURLException e){
                     e.printStackTrace();
                 }
-                remove(pos);
             } );
 
-            builder.setNegativeButton("Cancel", (dialog, id) -> {});
+            builder.setNegativeButton("취소", (dialog, id) -> {});
 
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
