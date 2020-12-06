@@ -86,13 +86,7 @@ public class CustomAdapter extends BaseAdapter {
             EditActivity.input_date = m_List.get(pos).date;
             EditActivity.input_local = m_List.get(pos).locate;
             EditActivity.input_complete = m_List.get(pos).complete;
-            try {
-                PHPRequest request = new PHPRequest(url + "/get_all.php");
-                request.PhPgetDetail(MainActivity._id, m_List.get(pos).ident);
-                EditActivity.input_detail = request.result_string;
-            }catch(MalformedURLException e){
-                e.printStackTrace();
-            }
+
             Intent intent = new Intent(context, EditActivity.class);
             context.startActivity(intent);
             MainActivity.mainActivity.finish();
