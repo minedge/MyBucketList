@@ -20,6 +20,7 @@ public class PHPRequest {
     private String readStream(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
         String line = reader.readLine();
+        if(line == null) line = "";
         reader.close();
 
         return line;
